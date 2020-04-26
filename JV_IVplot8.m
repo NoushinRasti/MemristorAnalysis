@@ -1,10 +1,13 @@
 clear;
 %give path to the directory of the current-voltage data, it reads from the
 %second row (first row is strings) and the third column which is voltage.
-data=csvread('E:\Flash-firstyear-PhD\PHD WELCOME\28 Nov\0p01mm-2v-cc-3-long-1r-.csv',1,2);
-v=data(:,1);
-I=data(:,2);
-t=data(:,3);
+data=readmatrix('E:\Flash-firstyear-PhD\PHD WELCOME\28 Nov\0p01mm-2v-cc-3-long-1r-.csv');
+
+r=data(:,1);
+v=data(:,3);
+I=data(:,4);
+t=data(:,5);
+
 plot_IV(v,I,t)
 
 
