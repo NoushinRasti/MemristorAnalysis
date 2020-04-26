@@ -2,20 +2,20 @@
 clear
 path='E:\data-1year-memristor\PHD WELCOME\28 Nov\' ;
 files=dir(strcat(path,'*0p01mm*.csv')) ;
+cell_files = cell(length(files));
 
 
-for i=1:length(files)
-    data=readmatrix(strcat(files(i).folder,'\',files(i).name));
+
+for index=1:length(files)
+    data=readmatrix(strcat(files(index).folder,'\',files(index).name));
+    cell_files{index}.r=data(:,1);
+    cell_files{index}.v=data(:,3);
+    cell_files{index}.I=data(:,4);
+    cell_files{index}.t=data(:,5);
+    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'\',files(index).name));
     
-    r=data(:,1);
-    v=data(:,3);
-    I=data(:,4);
-    t=data(:,5);
-    
-    D = GetElectrodeDiameter(strcat(files(i).folder,'\',files(i).name));
-    
-    
-    plot_IV(v,I,r,t,D)
+    plot_IV(cell_files{index}.v,cell_files{index}.I,cell_files{index}.r,cell_files{index}.t,cell_files{index}.D)
+    %legend( index, 'Location','north')
 end  
 
 function c = GetElectrodeDiameter(namefile)
@@ -24,6 +24,11 @@ b=a((length(a)-3):end);
 b(2)='.';
 c=str2double(b);
 end
+
+%function scanrate=calculatescanrate(
+%scan_rate=string(round((v(1)-v(index_max))/(t(1)-t(index_max)),3));
+%str=append('scan rate = ',scan_rate,' V/s');
+%end
 
 
 
@@ -39,7 +44,6 @@ for i=1:length(r)
 end
 
 
-%scan rate
 for i=1:counter
     if ( v(i)>v(i+1))
         index_max=i; 
@@ -50,7 +54,7 @@ end
 v=v(1:counter);
 I=I(1:counter);
 
-scan_rate=string(round((v(1)-v(index_max))/(t(1)-t(index_max)),3));
+
 
     %D=input("what is diameter in mm = ");
 A= 10^-2* pi*(D/2)^2; 
@@ -62,14 +66,14 @@ I_dens=10^3*I./A ; %change to Current density mA.cm^-2
 
 figure(1)
 plot(v,I_dens,'LineWidth',3)
-str=append('scan rate = ',scan_rate,' V/s');
-text(v(5),I(index_max),str,'Color','red','FontSize',12)
+
+
 
  xlim([-2.2 2.2])
 title('ITO/MAPbI(500nm)/Al')
 xlabel('Voltage(V)')
 ylabel('Current Density(mA.cm^-3)')
-legend({'1','2','3','4'}, 'Location','north')
+
 saveas(gcf,'Figures\0p05mm-2v-cc-3-long-1r.bmp') 
 
 
