@@ -1,7 +1,9 @@
 
 clear
-path='E:\data-1year-memristor\PHD WELCOME\28 Nov\' ;
-files=dir(strcat(path,'*0p01mm*.csv')) ;
+path=input('what is the path of the folder: ' ,'s');
+diameter=input('what is the diamete of the electrode in mm (form of 0p00): ','s');
+range_voltage=input('what is the range of voltage (only eneter the value): ','s'); 
+files=dir(strcat(path,'*',diameter,'mm','*',range_voltage,'v','*','.csv'));
 cell_files = cell(length(files));
 
 
@@ -22,8 +24,8 @@ cell_legend=cell(length(files),1);
 for i=1:length(files)
     cell_legend{i}=scan_rate(cell_files{i}.v,cell_files{i}.t);
 end
-legend(cell_legend,'location','northwest')
-hold on
+legend(cell_legend,'location','southwest')
+
 
 function c = GetElectrodeDiameter(namefile)
 a=extractBefore(namefile,'mm');
@@ -39,6 +41,7 @@ for i=1:length(v)
         index_max=i; 
         break;
     end
+end
 
 scan_rate=string(round((v(1)-v(index_max-2))/(t(1)-t(index_max-2)),3));
 str=strcat('scan rate = ',scan_rate,' V/s');
