@@ -1,9 +1,23 @@
 
 clear
+%By entering the path of a folder, this code finds all the csv file with a
+%specific diameter and range of voltage (which is given by user)and plot
+%the current density versus volatage of all these files and the logarithm
+%scale of the current density versus volatages.
+
+%receives the path of the file and converte it to a string
 path=input('what is the path of the folder: ' ,'s');
-diameter=input('what is the diamete of the electrode in mm (form of 0p00): ','s');
-range_voltage=input('what is the range of voltage (only eneter the value): ','s'); 
-files=dir(strcat(path,'*',diameter,'mm','*',range_voltage,'v','*','.csv'));
+
+%receives the diameter of the electrode in the form of 0p00, such as 1p00,
+diameter=input('what is the diamete of the electrode in mm: ','s');
+
+%receives the range of the voltage, only the value such as 2.
+range_voltage=input('what is the range of voltage: ','s'); 
+
+%find files with a specific diameter and voltage range
+files=dir(strcat(path,'\','*',diameter,'mm','*',range_voltage,'v','*','.csv'));
+
+
 cell_files = cell(length(files));
 
 
@@ -19,20 +33,21 @@ for index=1:length(files)
     
 end  
 
-
+%add legeng based on the scan rate of each measurement.
 cell_legend=cell(length(files),1);
 for i=1:length(files)
     cell_legend{i}=scan_rate(cell_files{i}.v,cell_files{i}.t);
 end
 legend(cell_legend,'location','southwest')
 
-
+%this fuction calculats the diameter based on the namefile
 function c = GetElectrodeDiameter(namefile)
 a=extractBefore(namefile,'mm');
 b=a((length(a)-3):end);
 b(2)='.';
 c=str2double(b);
 end
+
 
 function str=scan_rate(v,t)
 
@@ -43,7 +58,7 @@ for i=1:length(v)
     end
 end
 
-scan_rate=string(round((v(1)-v(index_max-2))/(t(1)-t(index_max-2)),3));
+scan_rate=string(round((v(1)-v(index_max))/(t(1)-t(index_max)),3));
 str=strcat('scan rate = ',scan_rate,' V/s');
 
 end
@@ -66,9 +81,9 @@ I=I(1:counter);
 
 
 
-    %D=input("what is diameter in mm = ");
+ 
 A= 10^-2* pi*(D/2)^2; 
-I_dens=10^3*I./A ; %change to Current density mA.cm^-2
+I_dens=10^3*I./A ; %change current to Current density (mA.cm^-2)
 
 
 figure(1)
