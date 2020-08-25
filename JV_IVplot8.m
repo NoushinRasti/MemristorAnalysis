@@ -2,11 +2,11 @@ clear;
 
 path=input('what is the path of the folder= ','s');
 title_figure=input('what is the structure of the device= ','s');
-files=dir(strcat(path,'\','*.csv'));
+files=dir(strcat(path,'/','*.csv'));
 cell_files = cell(size(files));
 
 for index=1:length(files)
-data=readmatrix(strcat(files(index).folder,'\',files(index).name));
+data=readmatrix(strcat(files(index).folder,'/',files(index).name));
     cell_files{index}.struct=title_figure;
     cell_files{index}.folder=files(index).folder;
     cell_files{index}.name=files(index).name;
@@ -15,7 +15,7 @@ data=readmatrix(strcat(files(index).folder,'\',files(index).name));
     cell_files{index}.v=data(:,3);
     cell_files{index}.I=data(:,4);
     cell_files{index}.t=data(:,5);
-    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'\',files(index).name));
+    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'/',files(index).name));
     plot_IV(cell_files{index})
     %plot_IV(cell_files{index}.v,cell_files{index}.I,cell_files{index}.t,cell_files{index}.r,cell_files{index}.D)
 
@@ -52,7 +52,7 @@ end
 v=file.v(1:counter);
 I=file.I(1:counter);
 
-%it finds the index at which the voltage passes zero in the first cycle.
+%it finds the index at which the voltage is maximum in the first cycle.
 for i=1:length(v)
     if ( v(i)>v(i+1)&& v(i+1)>v(i+2)&& v(i+2)>v(i+3) )
         index_max=i ;
@@ -64,7 +64,7 @@ for i=1:length(v)
         
 end
 
-%it finds the index at which the voltage is maximum in the first cycle.
+%it finds the index at which the voltage passes zero in the first cycleis.
 for i=index_max : length(v)
     if ( v(i)<0 && v(i+1)<0 && v(i+2)<0) 
         index_zero=i;
@@ -81,6 +81,16 @@ for i=index_zero : length(v)
         break
     end
 end
+
+%it finds the index at which the voltage passes zero for second time in the first cycleis.
+% for i=index_min : length(v)
+%     if ( v(i)>0 && v(i+1)>0 && v(i+2)>0) 
+%         index_zero2=i;
+%         break
+%     end
+% end
+
+
 
 
 
@@ -114,8 +124,8 @@ xlim([v(index_min)*1.1, v(index_max)*1.1])
 title(file.struct)
 xlabel('Voltage(V)')
 ylabel('Current(A)')
-%exportgraphics(gcf, strcat(file.folder,'\Figures\8plot\IV\',extractBefore(file.name,".csv"),".png" ),'Resolution',300)
-saveas(gcf, strcat(file.folder,'\Figures\8plot\IV\',extractBefore(file.name,".csv"),".png" ))
+%exportgraphics(gcf, strcat(file.folder,'/Figures/8plot/IV/',extractBefore(file.name,".csv"),".png" ),'Resolution',300)
+saveas(gcf, strcat(file.folder,'/Figures/8plot/IV/',extractBefore(file.name,".csv"),".png" ))
 
 
 
@@ -186,7 +196,6 @@ I4=I(index_min:length(v));
 
 plot(v1,I1,'-o','LineWidth',2,'MarkerSize',2)
 hold on
-
 plot(v2,I2,'-o','LineWidth',2,'MarkerSize',2)
 hold on
 plot(v3,I3,'-o','LineWidth',2,'MarkerSize',2)
