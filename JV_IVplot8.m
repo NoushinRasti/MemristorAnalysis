@@ -112,7 +112,7 @@ plot(v,I,'-o',...
     'MarkerEdgeColor','r',...
     'MarkerFaceColor',[0.5,0.5,0.5])
 
-area=string(round(A*10^2,2));
+area=string(round(A*10^2,3));
 Area=append('area of elecrtode = ',area,'mm^2');
 text(0.1,0.9,Area,'Units','normalized','Color','red','FontSize',12)
 
@@ -196,11 +196,11 @@ I4=I(index_min:length(v));
 
 plot(v1,I1,'-o','LineWidth',2,'MarkerSize',2)
 hold on
-plot(v2,I2,'-o','LineWidth',2,'MarkerSize',2)
+plot(v2,I2,'-','LineWidth',2,'MarkerSize',2)
 hold on
 plot(v3,I3,'-o','LineWidth',2,'MarkerSize',2)
 hold on
-plot(v4,I4,'-o','LineWidth',2,'MarkerSize',2)
+plot(v4,I4,'-','LineWidth',2,'MarkerSize',2)
 hold off
     
     legend({'1','2','3','4'}, 'Location','southeast')
@@ -242,17 +242,17 @@ I4=10^3* I(index_min:length(v))/A ;
 figure(7)
 plot(v1,I1,'-o','LineWidth',2.1,'MarkerSize',1.7)
 hold on
-plot(v2,I2,'-o','LineWidth',2.1,'MarkerSize',1.7)
+plot(v2,I2,'-','LineWidth',2.1,'MarkerSize',1.7)
 hold on
 plot(v3,I3,'-o','LineWidth',2.1,'MarkerSize',1.7)
 hold on
-plot(v4,I4,'-o','LineWidth',2.1,'MarkerSize',1.7)
+plot(v4,I4,'-','LineWidth',2.1,'MarkerSize',1.7)
 hold off
  legend({'1','2','3','4'}, 'Location','southeast')
 xlim([v(index_min)*1.1, v(index_max)*1.1])
 title(file.struct)
 xlabel('Voltage(V)')
-ylabel('Current Density (mA.cm^2)')
+ylabel('Current Density (mA.cm^-^2)')
 text(0.08,0.92,Area,'Units','normalized','Color','red','FontSize',12)
 text(0.08,0.84,scan,'Units','normalized','Color','blue','FontSize',12)
 saveas(gcf, strcat(file.folder,'\Figures\8plot\JV_4arrow\',extractBefore(file.name,".csv"),".png"))

@@ -2,11 +2,11 @@ clear;
 
 path=input('what is the path of the folder= ','s');
 title_figure=input('what is the structure of the device= ','s');
-files=dir(strcat(path,'\','*.csv'));
+files=dir(strcat(path,'/','*.csv'));
 cell_files = cell(size(files));
 
 for index=1:length(files)
-data=readmatrix(strcat(files(index).folder,'\',files(index).name));
+data=readmatrix(strcat(files(index).folder,'/',files(index).name));
     cell_files{index}.struct=title_figure;
     cell_files{index}.folder=files(index).folder;
     cell_files{index}.name=files(index).name;
@@ -15,7 +15,7 @@ data=readmatrix(strcat(files(index).folder,'\',files(index).name));
     cell_files{index}.v=data(:,3);
     cell_files{index}.I=data(:,4);
     cell_files{index}.t=data(:,5);
-    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'\',files(index).name));
+    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'/',files(index).name));
     plot_IV(cell_files{index})
     
     %plot_IV(cell_files{index}.v,cell_files{index}.I,cell_files{index}.t,cell_files{index}.r,cell_files{index}.D)
@@ -58,7 +58,9 @@ figure(1)
 plot(vol,curr,'LineWidth',1.3)
 hold on
 
-for i=2:3
+
+
+for i=2
  
     vol=file.v(counter(i-1):counter(i));
     curr=file.I(counter(i-1):counter(i));
@@ -67,7 +69,7 @@ hold on
     
 end
 
-
+    
 
 A= 10^-2* pi*(file.D/2)^2; 
 % I_dens=10^3*I./A ;  %changes the current to the Current density mA.cm^-2
@@ -88,7 +90,7 @@ area=string(round(A*10^2,3));
 Area=append('area of elecrtode = ',area,'mm^2');
 text(0.2,0.85,Area,'Units','normalized','Color','red','FontSize',12)
 
-scan_rate=string(round((file.v(1)-file.v(8))/(file.t(1)-file.t(8)),2));
+scan_rate=string(round((file.v(1)-file.v(5))/(file.t(1)-file.t(5)),2));
 scan=append('scan rate = ',scan_rate,' V/s');
 text(0.2,0.9,scan,'Units','normalized','Color','blue','FontSize',12)
 
@@ -98,7 +100,7 @@ xlabel('Voltage(V)')
 ylabel('Current(A)')
 legend({'1','2','3'}, 'Location','northwest')
 %exportgraphics(gcf, strcat(file.folder,'\Figures\8plot\IV\',extractBefore(file.name,".csv"),".png" ),'Resolution',300)
-saveas(gcf, strcat(file.folder,'\firs_sec_third\4plot\IV\',extractBefore(file.name,".csv"),".png" ))
+saveas(gcf, strcat(file.folder,'/firs_sec_third/4plot/IV/',extractBefore(file.name,".csv"),".png" ))
  hold off
 
 % 

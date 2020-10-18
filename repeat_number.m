@@ -2,11 +2,11 @@ clear;
 
 path=input('what is the path of the folder= ','s');
 title_figure=input('what is the structure of the device= ','s');
-files=dir(strcat(path,'\','*.csv'));
+files=dir(strcat(path,'/','*.csv'));
 cell_files = cell(size(files));
 
 for index=1:length(files)
-data=readmatrix(strcat(files(index).folder,'\',files(index).name));
+data=readmatrix(strcat(files(index).folder,'/',files(index).name));
     cell_files{index}.struct=title_figure;
     cell_files{index}.folder=files(index).folder;
     cell_files{index}.name=files(index).name;
@@ -15,7 +15,7 @@ data=readmatrix(strcat(files(index).folder,'\',files(index).name));
     cell_files{index}.v=data(:,3);
     cell_files{index}.I=data(:,4);
     cell_files{index}.t=data(:,5);
-    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'\',files(index).name));
+    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'/',files(index).name));
     plot_IV(cell_files{index})
     
     %plot_IV(cell_files{index}.v,cell_files{index}.I,cell_files{index}.t,cell_files{index}.r,cell_files{index}.D)
@@ -44,7 +44,8 @@ function plot_IV(file)
 % counter2=0;
 
 
-for i=1:length(file.r)
+ for i=1:length(file.r)
+  
     if( isnan(file.r(i))==0 )
         counter(file.r(i))= i;
     end
@@ -96,9 +97,11 @@ text(0.2,0.9,scan,'Units','normalized','Color','blue','FontSize',12)
 title(file.struct)
 xlabel('Voltage(V)')
 ylabel('Current(A)')
-legend({'1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','27','28','29','30'}, 'Location','northwest')
+
+
+ legend({'1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','27','28','29','30','31','32','33','34','35','36','37','38','39','40'}, 'Location','bestoutside')
 %exportgraphics(gcf, strcat(file.folder,'\Figures\8plot\IV\',extractBefore(file.name,".csv"),".png" ),'Resolution',300)
-saveas(gcf, strcat(file.folder,'\Figures_repeat5\4plot\IV\',extractBefore(file.name,".csv"),".png" ))
+saveas(gcf, strcat(file.folder,'/Figures_repeat5/4plot/IV/',extractBefore(file.name,".csv"),".png" ))
  hold off
 
 % 

@@ -2,7 +2,7 @@ clear;
 
 path=input('what is the path of the folder= ','s');
 title_figure=input('what is the structure of the device= ','s');
-files=dir(strcat(path,'\','*.csv'));
+files=dir(strcat(path,'/','*.csv'));
 cell_files = cell(size(files));
 
 for index=1:length(files)
@@ -102,7 +102,8 @@ lgd.Title.String='number of measurement' ;
 lgd.Title.FontSize =8;
 %exportgraphics(gcf, strcat(file.folder,'\Figures\8plot\IV\',extractBefore(file.name,".csv"),".png" ),'Resolution',300)
 saveas(gcf, strcat(file.folder,'\Figures_first_last\4plot\IV\',extractBefore(file.name,".csv"),".png" ))
- hold off
+saveas(gcf, strcat(file.folder,'\Figures_first_last\4plot\IV\',extractBefore(file.name,".csv"),".m" )) 
+hold off
 
 % 
 % %creates a plot using a base 10 logarithmic of the current versus voltage

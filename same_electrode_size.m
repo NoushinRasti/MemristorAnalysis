@@ -15,7 +15,7 @@ diameter=input('what is the diamete of the electrode in mm: ','s');
 range_voltage=input('what is the range of voltage: ','s'); 
 
 %find files with a specific diameter and voltage range
-files=dir(strcat(path,'\','*',diameter,'mm','*',range_voltage,'v','*','.csv'));
+files=dir(strcat(path,'/','*',diameter,'mm','*',range_voltage,'v','*','.csv'));
 
 
 cell_files = cell(length(files));
@@ -23,12 +23,12 @@ cell_files = cell(length(files));
 
 
 for index=1:length(files)
-    data=readmatrix(strcat(files(index).folder,'\',files(index).name));
+    data=readmatrix(strcat(files(index).folder,'/',files(index).name));
     cell_files{index}.r=data(:,1);
     cell_files{index}.v=data(:,3);
     cell_files{index}.I=data(:,4);
     cell_files{index}.t=data(:,5);
-    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'\',files(index).name));
+    cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'/',files(index).name));
     plot_IV(cell_files{index}.v,cell_files{index}.I,cell_files{index}.r,cell_files{index}.D)
     
 end  
@@ -94,7 +94,7 @@ title('ITO/MAPbI(500nm)/Al')
 xlabel('Voltage(V)')
 ylabel('Current Density(mA.cm^-3)')
 
-saveas(gcf,'Figures\0p05mm-2v-cc-3-long-1r.bmp') 
+saveas(gcf,'Figures/0p05mm-2v-cc-3-long-1r.bmp') 
 
 hold on
 

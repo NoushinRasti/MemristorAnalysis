@@ -2,31 +2,73 @@ clear;
 
 path=input('what is the path of the folder= ','s');
 title_figure=input('what is the structure of the device= ','s');
-files=dir(strcat(path,'/','*.csv'));
+
+%receives the range of the voltage, only the value such as 2.
+%range_voltage=input('what is the range of voltage: ','s'); 
+range_voltage = '0p5v';
+sr = 'l';
+
+%find files with a specific diameter and voltage range
+%files=dir(strcat(path,'/','*',range_voltage,'v','*','.csv'));
+files=dir(path);
+files = files(~startsWith({files.name}, '.'));
+
+% files=dir(strcat(path,'/','*.csv'));
 cell_files = cell(size(files));
+ Legend=cell(size(files));
 
 for index=1:length(files)
-data=readmatrix(strcat(files(index).folder,'/',files(index).name));
+%   data=readmatrix(strcat(files(index).folder,'/',files(index).name));
+    full_path = strcat(files(index).folder,'/',files(index).name,'/',range_voltage,'_',sr,'.csv');
+
+    if exist( full_path,'file') == 0
+  % File does not exist
+  % Skip to bottom of loop and continue with the loop
+       continue;
+    end
+    
+    
+    data=readmatrix(full_path);
     cell_files{index}.struct=title_figure;
     cell_files{index}.folder=files(index).folder;
     cell_files{index}.name=files(index).name;
     cell_files{index}.iter=index;
     cell_files{index}.r=data(:,1);
+    cell_files{index}.point=data(:,2);
     cell_files{index}.v=data(:,3);
     cell_files{index}.I=data(:,4);
     cell_files{index}.t=data(:,5);
     cell_files{index}.D=GetElectrodeDiameter(strcat(files(index).folder,'/',files(index).name));
     plot_IV(cell_files{index})
+    Vfind(index)=findCurrent(cell_files{index}, 10)
+    
+%   legend(Legend)
     
     %plot_IV(cell_files{index}.v,cell_files{index}.I,cell_files{index}.t,cell_files{index}.r,cell_files{index}.D)
 
 end
+
+Vfind
+standard_deviation=std(Vfind)
+Mean=mean(Vfind)
+
+hold off
 
 function c = GetElectrodeDiameter(namefile)
 a=extractBefore(namefile,'mm');
 b=a((length(a)-3):end);
 b(2)='.';
 c=str2double(b);
+end
+
+function current=findCurrent(file, read_voltage)
+for i=1:length(file.v)
+    if file.v > 
+        file.point=c
+    break    
+current=file.I(c);
+    end
+end
 end
 
 function plot_IV(file)
@@ -44,28 +86,16 @@ function plot_IV(file)
 % counter2=0;
 
 
+counter=0;
 for i=1:length(file.r)
-    if( isnan(file.r(i))== 0 )
-        counter(file.r(i))= i ;
+    if ( file.r(i)==1)
+        counter=i;
+    else
+        break;
     end
 end
-
-file.v(1:counter(1));
-vol=file.v(1:counter(1));
-curr=file.I(1:counter(1));
-
-figure(1)
-plot(vol,curr,'LineWidth',1.3)
-hold on
-
-len=(length(counter)-1);
-
-if (length(counter)>2 )
-vol=file.v(counter(len-1): counter(len));
-curr=file.I(counter(len-1): counter(len));
-
-plot(vol,curr,'LineWidth',1.3)
-end
+v=file.v(1:counter);
+I=file.I(1:counter);
 
 
 
@@ -85,26 +115,41 @@ A= 10^-2* pi*(file.D/2)^2;
 % plot(v4,I4,'LineWidth',1.3)
 
 area=string(round(A*10^2,3));
-Area=append('area of elecrtode = ',area,'mm^2');
-text(0.5,0.1,Area,'Units','normalized','Color','red','FontSize',12)
+Diameter=string(file.D);
+Area=append('A=',area,'mm^2','(','D=',Diameter,'mm',')');
+% text(0.5,0.1,Area,'Units','normalized','Color','red','FontSize',12)
 
-scan_rate=string(round((file.v(1)-file.v(8))/(file.t(1)-file.t(8)),2));
+scan_rate=string(round((file.v(1)-file.v(8))/(file.t(1)-file.t(8)),2))
 scan=append('scan rate = ',scan_rate,' V/s');
-text(0.5,0.15,scan,'Units','normalized','Color','blue','FontSize',12)
+% text(0.5,0.15,scan,'Units','normalized','Color','blue','FontSize',15)
+text(0.5,0.15,'scan rate = 1.05 V/s','Units','normalized','Color','blue','FontSize',15)
+text(0.5,0.22,Area,'Units','normalized','Color','blue','FontSize',15)
 
-lastone=string(len);
+% plot(v,I,'-o','LineWidth',1.2,'MarkerSize',1)
+% hold on
+plot(v,I,'-o','LineWidth',1.2,'MarkerSize',1,'DisplayName',file.name)
+lgd=legend;
+lgd.FontSize=14;
+lgd.Title.String='number of cell' ;
+hold on
 
 % xlim([v(index_min)*1.1, v(index_max)*1.1])
 title(file.struct)
 xlabel('Voltage(V)')
 ylabel('Current(A)')
-lgd=legend({'1',lastone}, 'Location','northwest');
-lgd.Title.String='number of measurement' ;
-lgd.Title.FontSize =8;
+
+    
+%Legend=strcat(Area); 
+% Legend=Area;   
+%  
+%  
+%  
+% legend(Legend)
+% lgd.Title.String='size of electrode' ;
+% lgd.Title.FontSize =8;
 %exportgraphics(gcf, strcat(file.folder,'\Figures\8plot\IV\',extractBefore(file.name,".csv"),".png" ),'Resolution',300)
-saveas(gcf, strcat(file.folder,'/Figures_first_lastone/4plot/IV/',extractBefore(file.name,".csv"),".png" ))
-saveas(gcf, strcat(file.folder,'/Figures_first_lastone/4plot/IV/',extractBefore(file.name,".csv"),".m" ))
- hold off
+% saveas(gcf, strcat(file.folder,'/Figures_Electrode_Area/',range_voltage,sr,".png" ))
+ 
 
 % 
 % %creates a plot using a base 10 logarithmic of the current versus voltage
@@ -159,3 +204,4 @@ saveas(gcf, strcat(file.folder,'/Figures_first_lastone/4plot/IV/',extractBefore(
 
 
 end
+
